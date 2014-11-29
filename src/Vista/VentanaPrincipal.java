@@ -5,16 +5,11 @@
  */
 package Vista;
 
-import Cache.DuplicatedObjectException;
-import Cache.FileConfigurationException;
-import Cache.StrangeObjectException;
 import Controlador.*;
 import Modelo.Candidato;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 
 /**
  *
@@ -25,12 +20,14 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     ControladorVotos controladorVotos;
     ControladorCandidatos controladorCandidatos;
     ControladorSesion controladorSesion;
+    GestorCandidatos gestor;
     private static VentanaPrincipal instancia;
 
     public VentanaPrincipal(ControladorVotos controladorDeVotos, ControladorSesion controladorSesion) {
         this.controladorVotos = controladorDeVotos;
         this.controladorSesion = controladorSesion;
         this.controladorCandidatos = new ControladorCandidatos(controladorVotos.getModelo(), 0);
+        this.gestor = GestorCandidatos.getInstance(controladorVotos, controladorSesion);
         initComponents();
     }
 
@@ -47,7 +44,6 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             modeloCombo.addElement(candidato.getId() + "  " + candidato.getNombre());
         }
         cboxCandidatos1.setModel(modeloCombo);
-        cboxCandidatos2.setModel(modeloCombo);
     }
 
     /**
@@ -63,20 +59,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         lbTexto1 = new javax.swing.JLabel();
         cboxCandidatos1 = new javax.swing.JComboBox();
         btnVotar = new javax.swing.JButton();
-        lbTexto2 = new javax.swing.JLabel();
-        txtNombre = new javax.swing.JTextField();
-        btnAgregar = new javax.swing.JButton();
         lbVotar = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
-        lbAgregar = new javax.swing.JLabel();
-        jSeparator1 = new javax.swing.JSeparator();
-        lbEliminar = new javax.swing.JLabel();
-        jSeparator3 = new javax.swing.JSeparator();
-        lbTexto3 = new javax.swing.JLabel();
-        cboxCandidatos2 = new javax.swing.JComboBox();
-        btnEliminar = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         Menu = new javax.swing.JMenu();
+        menuGestionar = new javax.swing.JMenuItem();
         CerrarSesion = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -88,7 +75,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         cboxCandidatos1.setBackground(new java.awt.Color(254, 254, 254));
         cboxCandidatos1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        btnVotar.setBackground(new java.awt.Color(25, 94, 255));
+        btnVotar.setBackground(new java.awt.Color(0, 144, 106));
         btnVotar.setForeground(new java.awt.Color(254, 254, 254));
         btnVotar.setText("Votar");
         btnVotar.addActionListener(new java.awt.event.ActionListener() {
@@ -97,44 +84,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             }
         });
 
-        lbTexto2.setText("Si desea agreagar un candidato, introduzca el nombre:");
-
-        txtNombre.setBackground(new java.awt.Color(254, 254, 254));
-
-        btnAgregar.setBackground(new java.awt.Color(25, 94, 255));
-        btnAgregar.setForeground(new java.awt.Color(254, 254, 254));
-        btnAgregar.setText("Agregar");
-        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregarActionPerformed(evt);
-            }
-        });
-
         lbVotar.setFont(new java.awt.Font("Cantarell", 1, 16)); // NOI18N
-        lbVotar.setForeground(new java.awt.Color(25, 94, 255));
+        lbVotar.setForeground(new java.awt.Color(0, 144, 106));
         lbVotar.setText("Votar");
-
-        lbAgregar.setFont(new java.awt.Font("Cantarell", 1, 16)); // NOI18N
-        lbAgregar.setForeground(new java.awt.Color(25, 94, 255));
-        lbAgregar.setText("Agregar");
-
-        lbEliminar.setFont(new java.awt.Font("Cantarell", 1, 16)); // NOI18N
-        lbEliminar.setForeground(new java.awt.Color(25, 94, 255));
-        lbEliminar.setText("Eliminar");
-
-        lbTexto3.setText("Seleccione el candidato que desea eliminar:");
-
-        cboxCandidatos2.setBackground(new java.awt.Color(254, 254, 254));
-        cboxCandidatos2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        btnEliminar.setBackground(new java.awt.Color(25, 94, 255));
-        btnEliminar.setForeground(new java.awt.Color(254, 254, 254));
-        btnEliminar.setText("Eliminar");
-        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEliminarActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -150,28 +102,10 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                                 .addComponent(cboxCandidatos1, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
                                 .addComponent(btnVotar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(lbTexto2)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(lbVotar)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jSeparator2))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(lbAgregar)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jSeparator1))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(lbEliminar)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jSeparator3))
-                            .addComponent(lbTexto3)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(cboxCandidatos2, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(jSeparator2)))
                         .addContainerGap())))
         );
         jPanel1Layout.setVerticalGroup(
@@ -187,32 +121,20 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cboxCandidatos1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnVotar))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lbAgregar)
-                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(16, 16, 16)
-                .addComponent(lbTexto2)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAgregar))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lbEliminar)
-                    .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(lbTexto3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cboxCandidatos2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnEliminar))
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         jMenuBar1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         Menu.setText("Sesión");
+
+        menuGestionar.setText("Gestionar Candidato");
+        menuGestionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuGestionarActionPerformed(evt);
+            }
+        });
+        Menu.add(menuGestionar);
 
         CerrarSesion.setText("Cerrar Sesión");
         CerrarSesion.addActionListener(new java.awt.event.ActionListener() {
@@ -236,7 +158,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -248,51 +172,19 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         int id;
         id = Integer.parseInt(candidatoID[0]);
 
-        try {
-            controladorVotos.realizarVotacion(id);
-        } catch (DuplicatedObjectException | StrangeObjectException | FileConfigurationException ex) {
-            Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.ERROR, null, ex);
-        }
+        controladorVotos.realizarVotacion(id);
     }//GEN-LAST:event_btnVotarActionPerformed
 
-    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
-        int id = cboxCandidatos1.getItemCount();
-        id++;
-        try {
-            controladorCandidatos.agregarCandidato(id, txtNombre.getText());
-        } catch (DuplicatedObjectException | FileConfigurationException | StrangeObjectException ex) {
-            Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.ERROR, null, ex);
-        }
-        JOptionPane.showMessageDialog(this, "Candidato " + txtNombre.getText() + " agregado con éxito");
-        txtNombre.setText("");
-    }//GEN-LAST:event_btnAgregarActionPerformed
-
-    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        String candidato = cboxCandidatos2.getSelectedItem().toString();
-        String[] candidatoID = candidato.split("  ");
-        int id;
-        id = Integer.parseInt(candidatoID[0]);
-        try {
-            controladorCandidatos.eliminarCandidato(id);
-        } catch (FileConfigurationException | DuplicatedObjectException | StrangeObjectException ex) {
-            Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.ERROR, null, ex);
-        }
-    }//GEN-LAST:event_btnEliminarActionPerformed
-
     private void CerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CerrarSesionActionPerformed
-        try {
-            controladorSesion.logOut();
-        } catch (FileConfigurationException | StrangeObjectException | DuplicatedObjectException ex) {
-            Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.ERROR, null, ex);
-        }
+        controladorSesion.logOut();
 
         this.dispose();
-        try {
-            new VentanaLogIn().setVisible(true);
-        } catch (FileConfigurationException | DuplicatedObjectException | StrangeObjectException ex) {
-            Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.ERROR, null, ex);
-        }
+        new VentanaLogIn().setVisible(true);
     }//GEN-LAST:event_CerrarSesionActionPerformed
+
+    private void menuGestionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuGestionarActionPerformed
+        gestor.setVisible(true);
+    }//GEN-LAST:event_menuGestionarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -333,22 +225,13 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem CerrarSesion;
     private javax.swing.JMenu Menu;
-    private javax.swing.JButton btnAgregar;
-    private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnVotar;
     private javax.swing.JComboBox cboxCandidatos1;
-    private javax.swing.JComboBox cboxCandidatos2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JSeparator jSeparator3;
-    private javax.swing.JLabel lbAgregar;
-    private javax.swing.JLabel lbEliminar;
     private javax.swing.JLabel lbTexto1;
-    private javax.swing.JLabel lbTexto2;
-    private javax.swing.JLabel lbTexto3;
     private javax.swing.JLabel lbVotar;
-    private javax.swing.JTextField txtNombre;
+    public javax.swing.JMenuItem menuGestionar;
     // End of variables declaration//GEN-END:variables
 }

@@ -4,7 +4,7 @@ import Modelo.Candidato;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
-import javax.swing.JPanel;
+import javax.swing.JFrame;
 import org.jfree.chart.*;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.CategoryPlot;
@@ -12,10 +12,9 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RefineryUtilities;
 
-public class GraficaDeBarras extends ApplicationFrame {
+public class GraficaDeBarras extends JFrame {
 
     private ArrayList<Candidato> candidato;
     private static GraficaDeBarras instancia;
@@ -43,6 +42,7 @@ public class GraficaDeBarras extends ApplicationFrame {
         final ChartPanel chartPanel = new ChartPanel(grafica);
         chartPanel.setPreferredSize(new Dimension(500, 270));
         setContentPane(chartPanel);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
     private CategoryDataset createDataset() {

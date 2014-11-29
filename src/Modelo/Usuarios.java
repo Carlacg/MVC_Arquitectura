@@ -2,21 +2,27 @@ package Modelo;
 
 import Cache.InterfazCache;
 import static Modelo.AdminUsuarios.contador;
-import Shiro.Rol;
-import Shiro.Usuario;
-import java.util.ArrayList;
 
-public class Usuarios extends Usuario implements InterfazCache {
+public class Usuarios implements InterfazCache {
 
-    private int id = 500;
+    private static final long serialVersionUID = -5372772868069600498L;
 
-    public Usuarios(int id, String Nombre_Usuario, String Password, ArrayList<Rol> roles) {
-        super(Nombre_Usuario, Password, roles);
+    private final String nombre_Usuario;
+    private final String password;
+    private final String roles;
+    private int id = 499;
+
+    public Usuarios(int id, String Nombre_Usuario, String Password, String roles) {
+        this.nombre_Usuario = Nombre_Usuario;
+        this.password = Password;
+        this.roles = roles;
         this.id = id;
     }
 
-    public Usuarios(String Nombre_Usuario, String Password, ArrayList<Rol> roles) {
-        super(Nombre_Usuario, Password, roles);
+    public Usuarios(String Nombre_Usuario, String Password, String roles) {
+        this.nombre_Usuario = Nombre_Usuario;
+        this.password = Password;
+        this.roles = roles;
         this.id = id + contador;
     }
 
@@ -24,7 +30,6 @@ public class Usuarios extends Usuario implements InterfazCache {
         this.id = id;
     }
 
-    
     @Override
     public int getId() {
         return id;
@@ -32,8 +37,7 @@ public class Usuarios extends Usuario implements InterfazCache {
 
     @Override
     public String toString() {
-        return id + super.getNombre_Usuario();
+        return id + " " + this.nombre_Usuario;
     }
 
-    
 }

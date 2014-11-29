@@ -5,15 +5,9 @@
  */
 package Vista;
 
-import Cache.DuplicatedObjectException;
-import Cache.FileConfigurationException;
-import Cache.StrangeObjectException;
 import Controlador.ControladorSesion;
 import Modelo.AdminUsuarios;
 import Modelo.Usuarios;
-import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -24,7 +18,7 @@ public class Registrar extends javax.swing.JFrame {
     ControladorSesion sesion;
     AdminUsuarios user;
 
-    public Registrar(ControladorSesion sesion) throws FileConfigurationException, StrangeObjectException, DuplicatedObjectException {
+    public Registrar(ControladorSesion sesion) {
         this.sesion = sesion;
         this.user = AdminUsuarios.getInstance();
         initComponents();
@@ -47,7 +41,7 @@ public class Registrar extends javax.swing.JFrame {
         txtPassword = new javax.swing.JPasswordField();
         btnRegistrar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Registro");
 
         jPanel1.setBackground(new java.awt.Color(254, 254, 254));
@@ -63,7 +57,7 @@ public class Registrar extends javax.swing.JFrame {
 
         txtPassword.setBackground(new java.awt.Color(254, 254, 254));
 
-        btnRegistrar.setBackground(new java.awt.Color(25, 94, 255));
+        btnRegistrar.setBackground(new java.awt.Color(0, 144, 106));
         btnRegistrar.setForeground(new java.awt.Color(254, 254, 254));
         btnRegistrar.setText("Registrar");
         btnRegistrar.addActionListener(new java.awt.event.ActionListener() {
@@ -77,9 +71,12 @@ public class Registrar extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnRegistrar, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
@@ -87,10 +84,7 @@ public class Registrar extends javax.swing.JFrame {
                         .addGap(40, 40, 40)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtUsuario)
-                            .addComponent(txtPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnRegistrar)))
+                            .addComponent(txtPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -132,12 +126,7 @@ public class Registrar extends javax.swing.JFrame {
         for (char letra : passwordTemp) {
             password += letra;
         }
-        Usuarios usuarioN = new Usuarios(usuario, password, null);
-        try {
-            sesion.agregarCuenta(usuarioN);
-        } catch (FileConfigurationException | StrangeObjectException | DuplicatedObjectException ex) {
-            Logger.getLogger(Registrar.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        sesion.agregarCuenta(usuario,password,"votante");
         this.dispose();
     }//GEN-LAST:event_btnRegistrarActionPerformed
 

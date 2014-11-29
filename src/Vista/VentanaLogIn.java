@@ -1,10 +1,7 @@
 package Vista;
 
-import Cache.*;
 import Controlador.*;
 import Modelo.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 public class VentanaLogIn extends javax.swing.JFrame {
@@ -14,7 +11,7 @@ public class VentanaLogIn extends javax.swing.JFrame {
     ControladorVotos votos;
     ControladorSesion sesion;
 
-    public VentanaLogIn() throws FileConfigurationException, DuplicatedObjectException, StrangeObjectException {
+    public VentanaLogIn() {
         adminCandidatos = AdminCandidatos.getInstance();
         votos = new ControladorVotos(adminCandidatos, 0);
         this.adminUsuarios = AdminUsuarios.getInstance();
@@ -50,15 +47,19 @@ public class VentanaLogIn extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Ingrese su usuario y contraseña para iniciar sesión");
 
+        jLabel2.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(0, 144, 106));
         jLabel2.setText("Usuario:");
 
+        jLabel3.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(0, 144, 106));
         jLabel3.setText("Contraseña:");
 
         txtUsuario.setBackground(new java.awt.Color(254, 254, 254));
 
         txtContraseña.setBackground(new java.awt.Color(254, 254, 254));
 
-        btnLogIn.setBackground(new java.awt.Color(25, 94, 255));
+        btnLogIn.setBackground(new java.awt.Color(0, 144, 106));
         btnLogIn.setForeground(new java.awt.Color(248, 248, 248));
         btnLogIn.setText("Iniciar Sesión");
         btnLogIn.addActionListener(new java.awt.event.ActionListener() {
@@ -67,7 +68,7 @@ public class VentanaLogIn extends javax.swing.JFrame {
             }
         });
 
-        btnResgistrar.setBackground(new java.awt.Color(25, 94, 255));
+        btnResgistrar.setBackground(new java.awt.Color(0, 144, 106));
         btnResgistrar.setForeground(new java.awt.Color(254, 254, 254));
         btnResgistrar.setText("Registrar");
         btnResgistrar.addActionListener(new java.awt.event.ActionListener() {
@@ -149,41 +150,28 @@ public class VentanaLogIn extends javax.swing.JFrame {
         for (char letra : txtContraseña.getPassword()) {
             password += letra;
         }
-        Usuarios user = new Usuarios(usuario, password, null);
-        try {
-            if (sesion.logIn(user)) {
-                
-                this.dispose();
-                
-                Barras b = new Barras(adminCandidatos, 0);
-                try {
-                    Pastel p = new Pastel(adminCandidatos, 0);
-                } catch (FileConfigurationException | DuplicatedObjectException | StrangeObjectException ex) {
-                    Logger.getLogger(VentanaLogIn.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                Tabla v = new Tabla(adminCandidatos, 0);
-                try {
-                    votos.desplegarVentana();
-                } catch (FileConfigurationException | DuplicatedObjectException | StrangeObjectException ex) {
-                    Logger.getLogger(VentanaLogIn.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                
-            } else {
-                JOptionPane.showMessageDialog(null, "Error al iniciar sesión");
+        
+        if (sesion.logIn(usuario,password)) {
+            this.dispose();
+            
+            Barras barra = new Barras(adminCandidatos, 0);
+            Pastel pastel = new Pastel(adminCandidatos, 0);
+            Tabla lista = new Tabla(adminCandidatos, 0);
+            votos.desplegarVentana();
+            if(adminUsuarios.getRol("admin")){
+                votos.permitirModificaciones(true);
+            }else{
+                votos.permitirModificaciones(false);
             }
-        } catch (FileConfigurationException | StrangeObjectException | DuplicatedObjectException ex) {
-            Logger.getLogger(VentanaLogIn.class.getName()).log(Level.SEVERE, null, ex);
+        } else {
+            JOptionPane.showMessageDialog(null, "Error al iniciar sesión");
         }
         txtUsuario.setText("");
         txtContraseña.setText("");
     }//GEN-LAST:event_btnLogInActionPerformed
 
     private void btnResgistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResgistrarActionPerformed
-        try {
-            new Registrar(sesion).setVisible(true);
-        } catch (FileConfigurationException | StrangeObjectException | DuplicatedObjectException ex) {
-            Logger.getLogger(VentanaLogIn.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        new Registrar(sesion).setVisible(true);
     }//GEN-LAST:event_btnResgistrarActionPerformed
 
     /**
@@ -212,11 +200,7 @@ public class VentanaLogIn extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                try {
-                    new VentanaLogIn().setVisible(true);
-                } catch (FileConfigurationException | DuplicatedObjectException | StrangeObjectException ex) {
-                    Logger.getLogger(VentanaLogIn.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                new VentanaLogIn().setVisible(true);
             }
         });
     }

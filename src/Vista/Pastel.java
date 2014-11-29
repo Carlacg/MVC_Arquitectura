@@ -1,8 +1,5 @@
 package Vista;
 
-import Cache.DuplicatedObjectException;
-import Cache.FileConfigurationException;
-import Cache.StrangeObjectException;
 import Modelo.AdminCandidatos;
 import Modelo.Candidato;
 import Modelo.Modelo;
@@ -12,9 +9,9 @@ public class Pastel extends Vista{
     private final GraficaDePastel graficaPastel;
     private ArrayList<Candidato> candidatos;
     
-    public Pastel(Modelo modelo, int idEvento) throws FileConfigurationException, DuplicatedObjectException, StrangeObjectException {
+    public Pastel(Modelo modelo, int idEvento){
         super(modelo, idEvento);
-        this.candidatos= AdminCandidatos.getInstance().cands;
+        this.candidatos= AdminCandidatos.getInstance().obtenerLista();
         graficaPastel = GraficaDePastel.getInstance("Votaciones");
     }
 

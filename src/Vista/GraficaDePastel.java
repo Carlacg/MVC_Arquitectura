@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import javax.swing.JFrame;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -12,10 +13,9 @@ import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
-import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RefineryUtilities;
 
-public class GraficaDePastel extends ApplicationFrame {
+public class GraficaDePastel extends JFrame {
 
     private static ArrayList<Candidato> candidato;
     private static GraficaDePastel instancia;
@@ -42,6 +42,7 @@ public class GraficaDePastel extends ApplicationFrame {
         final ChartPanel chartPanel = new ChartPanel(grafica);
         chartPanel.setPreferredSize(new Dimension(500, 270));
         setContentPane(chartPanel);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
     
     private static JFreeChart createChart(PieDataset graficaPastel) {

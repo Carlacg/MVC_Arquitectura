@@ -1,8 +1,5 @@
 package Controlador;
 
-import Cache.DuplicatedObjectException;
-import Cache.FileConfigurationException;
-import Cache.StrangeObjectException;
 import Modelo.AdminCandidatos;
 import Modelo.Modelo;
 
@@ -14,12 +11,16 @@ public class ControladorCandidatos extends Controlador {
         super(modelo, idEvento);
     }
 
-    public void agregarCandidato(int id, String nombreCandidato) throws DuplicatedObjectException, FileConfigurationException, StrangeObjectException {
+    public void agregarCandidato(int id, String nombreCandidato){
         AdminCandidatos.getInstance().agregarCandidatos(id, nombreCandidato);
     }
 
-    public void eliminarCandidato(int id) throws FileConfigurationException, DuplicatedObjectException, StrangeObjectException {
+    public void eliminarCandidato(int id){
         AdminCandidatos.getInstance().eliminarCandidatos(id);
+    }
+
+    @Override
+    public void actualizar(Object o) {
     }
 
 }

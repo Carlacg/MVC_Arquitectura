@@ -3,7 +3,6 @@ package Vista;
 import Modelo.Candidato;
 import Modelo.Modelo;
 import java.util.ArrayList;
-import org.jfree.ui.RefineryUtilities;
 
 public class Barras extends Vista {
 

@@ -4,15 +4,15 @@ import Cache.*;
 import Shiro.*;
 import java.awt.Window;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class AdminUsuarios extends Modelo {
 
     private static AdminUsuarios instancia;
     private final ShiroApi shiro;
     private final DreamTeamCache cache;
-    public final ArrayList<Usuarios> users;
-    private static final int USUARIOS_CACHE = 1000;
-    public static int contador = 1;
+    public static int contador = 0;
 
     private AdminUsuarios() throws FileConfigurationException, StrangeObjectException, DuplicatedObjectException {
         this.cache = DreamTeamCache.getInstance();
@@ -20,13 +20,15 @@ public class AdminUsuarios extends Modelo {
         this.shiro = new ShiroApi();
         inicializarUsuarios();
         inicializarEventos();
-        this.users = obtenerLista();
-        super.datos = users;
     }
 
-    public static AdminUsuarios getInstance() throws FileConfigurationException, StrangeObjectException, DuplicatedObjectException {
+    public static AdminUsuarios getInstance() {
         if (instancia == null) {
-            instancia = new AdminUsuarios();
+            try {
+                instancia = new AdminUsuarios();
+            } catch (FileConfigurationException | StrangeObjectException | DuplicatedObjectException ex) {
+                Logger.getLogger(AdminUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return instancia;
     }
@@ -38,20 +40,29 @@ public class AdminUsuarios extends Modelo {
         }
     }
 
-    private void inicializarUsuarios() throws DuplicatedObjectException {
-        Usuarios administrador = new Usuarios(500, "Carla", "123", null);
-        registrarUsuario(administrador);
-        cache.put(administrador);
+    private void inicializarUsuarios() {
+        try {
+            Usuarios administrador = new Usuarios(500, "Carla", "123", "admin");
+            registrarUsuario("Carla", "123", "admin");
+            cache.put(administrador);
+        } catch (DuplicatedObjectException ex) {
+            Logger.getLogger(AdminUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
-    public boolean logIn(Usuarios usuario) {
-        return shiro.logIn(usuario);
+    public boolean logIn(String nombre, String clave) {
+        return shiro.logIn(nombre, clave);
     }
 
-    public void registrarUsuario(Usuarios usuario) throws DuplicatedObjectException {
-        ++contador;
-        shiro.agregarCuenta(usuario);
-        cache.put(usuario);
+    public void registrarUsuario(String nombre, String clave, String rol) {
+        try {
+            ++contador;
+            shiro.agregarCuenta(nombre, clave, rol);
+            Usuarios usuario = new Usuarios(nombre,clave,rol);
+            cache.put(usuario);
+        } catch (DuplicatedObjectException ex) {
+            Logger.getLogger(AdminUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void logOut() {
@@ -64,18 +75,33 @@ public class AdminUsuarios extends Modelo {
             window.dispose();
         }
     }
+    
+    public boolean getRol(String rol){
+        return shiro.hasPermission(rol);
+    }
 
-    public final ArrayList obtenerLista() throws StrangeObjectException {
+    public final ArrayList obtenerLista() {
+        int contadorLista = 500 + contador;
+        boolean nulo = false;
         ArrayList elementos = new ArrayList<>();
         //Se recorre la cache para agregar los usuarios que tenga dentro:
-        for (int i = 500; i < USUARIOS_CACHE; i++) {
-            Object elemento = cache.get(i);
-            //si devuelve null, se deja de recorrer la cache
-            if (elemento == null) {
-                break;
+        for (int i = 500; i < contadorLista; i++) {
+            try {
+                Object elemento = cache.get(i);
+                
+                elementos.add(elemento);
+            } catch (StrangeObjectException ex) {
+                Logger.getLogger(AdminUsuarios.class.getName()).log(Level.SEVERE, null, ex);
             }
-            elementos.add(elemento);
+                   
         }
         return elementos;
     }
+
+    @Override
+    public Object getDatos() {
+        setDatos(obtenerLista());
+        return super.datos;
+    }
+    
 }
