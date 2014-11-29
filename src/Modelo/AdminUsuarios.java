@@ -12,7 +12,7 @@ public class AdminUsuarios extends Modelo {
     private static AdminUsuarios instancia;
     private final ShiroApi shiro;
     private final DreamTeamCache cache;
-    public static int contador = 0;
+    public static int contador = 499;
 
     private AdminUsuarios() throws FileConfigurationException, StrangeObjectException, DuplicatedObjectException {
         this.cache = DreamTeamCache.getInstance();
@@ -41,13 +41,7 @@ public class AdminUsuarios extends Modelo {
     }
 
     private void inicializarUsuarios() {
-        try {
-            Usuarios administrador = new Usuarios(500, "Carla", "123", "admin");
-            registrarUsuario("Carla", "123", "admin");
-            cache.put(administrador);
-        } catch (DuplicatedObjectException ex) {
-            Logger.getLogger(AdminUsuarios.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        registrarUsuario("Carla", "123", "admin");
     }
 
     public boolean logIn(String nombre, String clave) {
@@ -58,8 +52,9 @@ public class AdminUsuarios extends Modelo {
         try {
             ++contador;
             shiro.agregarCuenta(nombre, clave, rol);
-            Usuarios usuario = new Usuarios(nombre,clave,rol);
+            Usuarios usuario = new Usuarios(contador, nombre, clave, rol);
             cache.put(usuario);
+
         } catch (DuplicatedObjectException ex) {
             Logger.getLogger(AdminUsuarios.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -75,25 +70,23 @@ public class AdminUsuarios extends Modelo {
             window.dispose();
         }
     }
-    
-    public boolean getRol(String rol){
+
+    public boolean getRol(String rol) {
         return shiro.hasPermission(rol);
     }
 
     public final ArrayList obtenerLista() {
-        int contadorLista = 500 + contador;
-        boolean nulo = false;
         ArrayList elementos = new ArrayList<>();
         //Se recorre la cache para agregar los usuarios que tenga dentro:
-        for (int i = 500; i < contadorLista; i++) {
+        for (int i = 500; i <= contador; i++) {
             try {
                 Object elemento = cache.get(i);
-                
+
                 elementos.add(elemento);
             } catch (StrangeObjectException ex) {
                 Logger.getLogger(AdminUsuarios.class.getName()).log(Level.SEVERE, null, ex);
             }
-                   
+
         }
         return elementos;
     }
@@ -103,5 +96,5 @@ public class AdminUsuarios extends Modelo {
         setDatos(obtenerLista());
         return super.datos;
     }
-    
+
 }

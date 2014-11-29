@@ -10,20 +10,13 @@ public class Usuarios implements InterfazCache {
     private final String nombre_Usuario;
     private final String password;
     private final String roles;
-    private int id = 499;
+    private int id;
 
     public Usuarios(int id, String Nombre_Usuario, String Password, String roles) {
         this.nombre_Usuario = Nombre_Usuario;
         this.password = Password;
         this.roles = roles;
         this.id = id;
-    }
-
-    public Usuarios(String Nombre_Usuario, String Password, String roles) {
-        this.nombre_Usuario = Nombre_Usuario;
-        this.password = Password;
-        this.roles = roles;
-        this.id = id + contador;
     }
 
     public void setId(int id) {

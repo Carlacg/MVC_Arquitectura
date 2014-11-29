@@ -10,13 +10,13 @@ public class AdminCandidatos extends Modelo {
     private static AdminCandidatos instancia;
     private final DreamTeamCache cache;
     int contador = 0;
-    
+
     private AdminCandidatos() throws FileConfigurationException, DuplicatedObjectException, StrangeObjectException {
         this.cache = DreamTeamCache.getInstance();
         cache.configLoad();
         inicializarCandidatos();
         inicializarEventos();
-        
+
     }
 
     public static AdminCandidatos getInstance() {
@@ -43,7 +43,7 @@ public class AdminCandidatos extends Modelo {
         }
     }
 
-    public void agregarCandidatos(int id, String nombre){
+    public void agregarCandidatos(int id, String nombre) {
         try {
             contador++;
             Candidato candidatoNuevo = new Candidato(id, nombre);
@@ -54,7 +54,7 @@ public class AdminCandidatos extends Modelo {
         }
     }
 
-    public void agregarVoto(int id){
+    public void agregarVoto(int id) {
         try {
             Candidato candidato = (Candidato) cache.get(id);
             candidato.agregarVoto();
@@ -65,13 +65,17 @@ public class AdminCandidatos extends Modelo {
         }
     }
 
-    public void eliminarCandidatos(int id){
+    public void eliminarCandidatos(int id) {
         try {
-            cache.delete(id);
-            Candidato temp = (Candidato) cache.get(contador);
-            temp.setId(id);
-            cache.put(temp);
-            cache.delete(contador);
+            if (cache.get(id + 1) == null) {
+                cache.delete(id);
+            } else {
+                cache.delete(id);
+                Candidato temp = (Candidato) cache.get(contador);
+                temp.setId(id);
+                cache.put(temp);
+                cache.delete(contador);
+            }
             contador--;
             notificarObservadoresEvento(0);
         } catch (StrangeObjectException | DuplicatedObjectException ex) {
@@ -79,7 +83,7 @@ public class AdminCandidatos extends Modelo {
         }
     }
 
-    public final ArrayList obtenerLista(){
+    public final ArrayList obtenerLista() {
         ArrayList elementos = new ArrayList<>();
         //Se recorre la cache para agregar los candidatos que tenga dentro:
         for (int i = 1; i <= contador; i++) {
