@@ -150,7 +150,7 @@ public class VentanaLogIn extends javax.swing.JFrame {
         for (char letra : txtContraseña.getPassword()) {
             password += letra;
         }
-        
+        adminUsuarios.inicializarUsuarios();
         if (sesion.logIn(usuario,password)) {
             this.dispose();
             

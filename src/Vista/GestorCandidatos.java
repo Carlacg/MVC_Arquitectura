@@ -179,6 +179,7 @@ public class GestorCandidatos extends javax.swing.JFrame {
         controladorCandidatos.agregarCandidato(id, txtNombre.getText());
         JOptionPane.showMessageDialog(this, "Candidato " + txtNombre.getText() + " agregado con éxito");
         txtNombre.setText("");
+        this.dispose();
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
@@ -187,6 +188,7 @@ public class GestorCandidatos extends javax.swing.JFrame {
         int id;
         id = Integer.parseInt(candidatoID[0]);
         controladorCandidatos.eliminarCandidato(id);
+        this.dispose();
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     /**

@@ -2,7 +2,7 @@ package Modelo;
 
 import Cache.InterfazCache;
 
-public class Usuarios implements InterfazCache {
+public class Usuario implements InterfazCache {
 
     private static final long serialVersionUID = -5372772868069600498L;
 
@@ -11,7 +11,7 @@ public class Usuarios implements InterfazCache {
     private final String roles;
     private int id;
 
-    public Usuarios(int id, String Nombre_Usuario, String Password, String roles) {
+    public Usuario(int id, String Nombre_Usuario, String Password, String roles) {
         this.nombre_Usuario = Nombre_Usuario;
         this.password = Password;
         this.roles = roles;

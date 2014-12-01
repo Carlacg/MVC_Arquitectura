@@ -5,6 +5,8 @@ import Modelo.Candidato;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DAOCandidatos extends DAOBD<Candidato> {
 
@@ -12,6 +14,11 @@ public class DAOCandidatos extends DAOBD<Candidato> {
     public String obtenerCondicionElemento(Candidato elemento) {
         int idCandidato = elemento.getId();
         String condicion = "candidato_id = " + idCandidato;
+        try {
+            this.closeConnection(this.getConnection());
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOCandidatos.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return condicion;
     }
 
@@ -23,6 +30,11 @@ public class DAOCandidatos extends DAOBD<Candidato> {
         } catch (SQLException ex) {
             System.out.println("ERROR EN LA LEÍDA DE LA BD.");
             ex.printStackTrace();
+        }
+        try {
+            this.closeConnection(this.getConnection());
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOCandidatos.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -37,6 +49,7 @@ public class DAOCandidatos extends DAOBD<Candidato> {
                         + ",`nombre` = '" + elemento.getNombre() + "'"
                         + ",`num_votos` = '" + elemento.getNumVotos() + "'"
                         + " WHERE " + condicion);
+        this.closeConnection(this.getConnection());
         return (actualizaCandidato != 0);
     }
 
@@ -51,6 +64,7 @@ public class DAOCandidatos extends DAOBD<Candidato> {
         Candidato unCandidato = new Candidato(busquedaCliente.getInt("candidato_id"),
                 busquedaCliente.getString("nombre"),
                 busquedaCliente.getInt("num_votos"));
+        this.closeConnection(this.getConnection());
         return unCandidato;
     }
 

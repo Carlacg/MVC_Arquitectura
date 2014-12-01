@@ -5,6 +5,7 @@ import Controlador.DAO.DAOUsuarios;
 import Shiro.*;
 import java.awt.Window;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -13,13 +14,15 @@ public class AdminUsuarios extends Modelo {
     private static AdminUsuarios instancia;
     private final ShiroApi shiro;
     private final DreamTeamCache cache;
-    private final int primerUsuario = 500;
-    private int contador = 499;
+    private final int primerUsuario = 501;
+    private int contador = 500;
     private DAOUsuarios daoUsuarios;
+    private final AdminCandidatos adminCandidatos;
 
     private AdminUsuarios() {
         this.cache = DreamTeamCache.getInstance();
         this.daoUsuarios = new DAOUsuarios();
+        this.adminCandidatos = AdminCandidatos.getInstance();
         try {
             cache.configLoad();
         } catch (FileConfigurationException ex) {
@@ -27,7 +30,7 @@ public class AdminUsuarios extends Modelo {
             ex.printStackTrace();
         }
         this.shiro = new ShiroApi();
-        inicializarUsuarios();
+//        inicializarUsuarios();
         inicializarEventos();
         inicializarRoles();
     }
@@ -47,8 +50,8 @@ public class AdminUsuarios extends Modelo {
         }
     }
 
-    private void inicializarUsuarios() {
-        for (Usuarios usuario : daoUsuarios.getAllFromTable("usuarios")) {
+    public void inicializarUsuarios() {
+        for (Usuario usuario : daoUsuarios.getAllFromTable("usuario")) {
             contador++;
             try {
                 shiro.agregarCuenta(usuario.getNombre_Usuario(), usuario.getPassword(), usuario.getRoles());
@@ -67,14 +70,24 @@ public class AdminUsuarios extends Modelo {
     }
 
     public boolean logIn(String nombre, String clave) {
-        return shiro.logIn(nombre, clave);
+        Usuario usuario = null;
+        try {
+            usuario = daoUsuarios.findElement("usuario", "nombre= '" + nombre + "'");
+        } catch (SQLException ex) {
+            Logger.getLogger(AdminUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return shiro.logIn(usuario.getNombre_Usuario(), clave);
+    }
+
+    private boolean existenciaUsuario(int id) {
+        return cache.existenciaDeObjeto(id);
     }
 
     public void registrarUsuario(String nombre, String clave, String rol) {
         try {
             ++contador;
             clave = shiro.encriptar(clave);
-            Usuarios usuario = new Usuarios(contador, nombre, clave, rol);
+            Usuario usuario = new Usuario(contador, nombre, clave, rol);
             shiro.agregarCuenta(usuario.getNombre_Usuario(), usuario.getPassword(), usuario.getRoles());
             cache.put(usuario);
             daoUsuarios.addElement(usuario);
@@ -95,20 +108,34 @@ public class AdminUsuarios extends Modelo {
      * @param clave
      */
     public void registrarCuenta(String usuario, String clave) {
+//        contador++;
+//        String password = shiro.encriptar(clave);
+//
+//        Usuario nuevoUsuario = new Usuario(contador, usuario, password, "Votante");
+//        try {
+//            shiro.agregarCuenta(nuevoUsuario.getNombre_Usuario(), nuevoUsuario.getPassword(), nuevoUsuario.getRoles());
+//            cache.put(nuevoUsuario);
+//            daoUsuarios.addElement(nuevoUsuario);
+//        } catch (DuplicatedObjectException ex) {
+//            System.out.println("Error al agregar usuario a la cache");
+//            ex.printStackTrace();
+//        } catch (SQLException ex) {
+//            Logger.getLogger(AdminUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+
+        inicializarUsuarios();
         contador++;
         String password = shiro.encriptar(clave);
-
-        Usuarios nuevoUsuario = new Usuarios(contador, usuario, password, "Votante");
+        Usuario usuarioNuevo = new Usuario(contador, usuario, password, "Votante");
         try {
-            shiro.agregarCuenta(nuevoUsuario.getNombre_Usuario(), nuevoUsuario.getPassword(), nuevoUsuario.getRoles());
-            cache.put(nuevoUsuario);
-            daoUsuarios.addElement(nuevoUsuario);
-        } catch (DuplicatedObjectException ex) {
-            System.out.println("Error al agregar usuario a la cache");
-            ex.printStackTrace();
-        } catch (SQLException ex) {
+            daoUsuarios.addElement(usuarioNuevo);
+            cache.put(usuarioNuevo);
+            shiro.agregarCuenta(usuarioNuevo.getNombre_Usuario(), usuarioNuevo.getPassword(),
+                    usuarioNuevo.getRoles());
+        } catch (SQLException | DuplicatedObjectException ex) {
             Logger.getLogger(AdminUsuarios.class.getName()).log(Level.SEVERE, null, ex);
         }
+        notificarObservadoresEvento(0);
     }
 
     public void logOut() {
@@ -132,11 +159,10 @@ public class AdminUsuarios extends Modelo {
 
     @Override
     public Object getDatos() {
-        try {
-            setDatos(cache.getList(primerUsuario, contador));
-        } catch (StrangeObjectException ex) {
-            System.out.println("Error al obtener elementos de la cache");
-            ex.printStackTrace();
+        ArrayList<Usuario> usuarios = new ArrayList();
+        for (Usuario usuario : daoUsuarios.getAllFromTable("usuario")) {
+            usuarios.add(usuario);
+            shiro.agregarCuenta(usuario.getNombre_Usuario(), usuario.getPassword(), usuario.getRoles());
         }
         return super.datos;
     }
