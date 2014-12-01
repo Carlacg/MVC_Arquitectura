@@ -158,11 +158,6 @@ public class VentanaLogIn extends javax.swing.JFrame {
             Pastel pastel = new Pastel(adminCandidatos, 0);
             Tabla lista = new Tabla(adminCandidatos, 0);
             votos.desplegarVentana();
-            if(adminUsuarios.getRol("admin")){
-                votos.permitirModificaciones(true);
-            }else{
-                votos.permitirModificaciones(false);
-            }
         } else {
             JOptionPane.showMessageDialog(null, "Error al iniciar sesión");
         }

@@ -1,11 +1,10 @@
-
 package Modelo;
 
 import Cache.InterfazCache;
 import java.awt.Color;
 import java.awt.Paint;
 
-public class Candidato implements InterfazCache{
+public class Candidato implements InterfazCache {
 
     private static final long serialVersionUID = -5372772868069600498L;
 
@@ -18,6 +17,12 @@ public class Candidato implements InterfazCache{
         this.id = id;
         this.nombre = nombre;
         this.numVotos = 0;
+    }
+
+    public Candidato(int id, String nombre, int numVotos) {
+        this.nombre = nombre;
+        this.numVotos = numVotos;
+        this.id = id;
     }
 
     public Candidato(String nombre) {
@@ -41,14 +46,13 @@ public class Candidato implements InterfazCache{
         return numVotos;
     }
 
-
     public void setId(int id) {
         this.id = id;
     }
 
     @Override
     public String toString() {
-        return nombre;
+        return getId() + ", " + "'" + getNombre() + "'" + ", " + getNumVotos();
     }
 
     @Override

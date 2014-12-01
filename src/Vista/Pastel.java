@@ -11,7 +11,7 @@ public class Pastel extends Vista{
     
     public Pastel(Modelo modelo, int idEvento){
         super(modelo, idEvento);
-        this.candidatos= AdminCandidatos.getInstance().obtenerLista();
+        this.candidatos= (ArrayList<Candidato>) AdminCandidatos.getInstance().getDatos();
         graficaPastel = GraficaDePastel.getInstance("Votaciones");
     }
 

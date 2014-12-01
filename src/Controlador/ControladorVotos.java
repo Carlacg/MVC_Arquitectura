@@ -29,14 +29,6 @@ public class ControladorVotos extends Controlador {
         gestor.inicializaVentana((ArrayList<Candidato>) modelo.getDatos());
     }
 
-    public void permitirModificaciones(boolean permiso){
-        ventanaPrincipal.menuGestionar.setEnabled(permiso);
-        if(permiso){
-            ventanaPrincipal.setTitle("Modo Administrador");
-        }else{
-            ventanaPrincipal.setTitle("Votante");
-        }
-    }
     
     @Override
     public void actualizar(Object o) {

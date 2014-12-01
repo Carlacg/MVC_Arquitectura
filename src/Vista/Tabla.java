@@ -38,8 +38,6 @@ public class Tabla extends Vista {
 
     @Override
     public void activar() {
-        //vn.init(candidatos);
-        //vn.setVisible(true);
         ventana.llenaTabla(this.candidatos);
         ventana.setVisible(true);
     }

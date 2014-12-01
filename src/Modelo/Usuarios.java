@@ -1,7 +1,6 @@
 package Modelo;
 
 import Cache.InterfazCache;
-import static Modelo.AdminUsuarios.contador;
 
 public class Usuarios implements InterfazCache {
 
@@ -28,9 +27,22 @@ public class Usuarios implements InterfazCache {
         return id;
     }
 
+    public String getNombre_Usuario() {
+        return nombre_Usuario;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getRoles() {
+        return roles;
+    }
+
+
     @Override
     public String toString() {
-        return id + " " + this.nombre_Usuario;
+        return getId() + ", " + "'" + getNombre_Usuario() + "'" + ", '" + getPassword() + "', '" + getRoles() + "'";
     }
 
 }

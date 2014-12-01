@@ -19,8 +19,8 @@ public class ControladorSesion extends Controlador {
         AdminUsuarios.getInstance().logOut();
     }
 
-    public void agregarCuenta(String nombre, String clave, String rol) {
-        AdminUsuarios.getInstance().registrarUsuario(nombre, clave, rol);
+    public void agregarCuenta(String nombre, String clave) {
+        AdminUsuarios.getInstance().registrarCuenta(nombre, clave);
     }
 
     @Override
