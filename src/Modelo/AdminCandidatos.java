@@ -7,16 +7,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class AdminCandidatos extends Modelo {
-
+    
     private static AdminCandidatos instancia;
     private final DreamTeamCache cache;
     private int contador = 0;
     private final int primerCandidato = 1;
     private DAOCandidatos daoCandidato;
-
+    
     private AdminCandidatos() {
         this.cache = DreamTeamCache.getInstance();
-        this.daoCandidato  = new DAOCandidatos();
+        this.daoCandidato = new DAOCandidatos();
         try {
             cache.configLoad();
             inicializarCandidatos();
@@ -26,14 +26,14 @@ public class AdminCandidatos extends Modelo {
             ex.printStackTrace();
         }
     }
-
+    
     public static AdminCandidatos getInstance() {
         if (instancia == null) {
             instancia = new AdminCandidatos();
         }
         return instancia;
     }
-
+    
     private void inicializarCandidatos() {
         daoCandidato.getAllFromTable("candidato");
         for (Candidato candidato : daoCandidato.getAllFromTable("candidato")) {
@@ -45,14 +45,14 @@ public class AdminCandidatos extends Modelo {
             }
         }
     }
-
+    
     public final void inicializarEventos() {
         int numeroDeEventos = 3;
         for (int i = 0; i < numeroDeEventos; i++) {
             eventos.add(new Evento(i));
         }
     }
-
+    
     public void agregarCandidatos(int id, String nombre) {
         try {
             contador++;
@@ -67,7 +67,7 @@ public class AdminCandidatos extends Modelo {
             Logger.getLogger(AdminCandidatos.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     public void agregarVoto(int id) {
         try {
             Candidato candidato = (Candidato) cache.get(id);
@@ -81,23 +81,27 @@ public class AdminCandidatos extends Modelo {
             ex.printStackTrace();
         }
     }
-
+    
     public void eliminarCandidatos(int id) {
         try {
-
+            
             if (cache.get(id + 1) == null) {
                 cache.delete(id);
                 Candidato candidatoAEliminar = (Candidato) daoCandidato.
                         findElement("candidato", "candidato_id = " + id);
                 daoCandidato.deleteElement(candidatoAEliminar);
             } else {
+                Candidato candTemp = (Candidato) cache.get(id);
                 cache.delete(id);
-                Candidato temp = (Candidato) cache.get(contador);
-                String condicion = daoCandidato.obtenerCondicionElemento(temp);
-                temp.setId(id);
-                cache.put(temp);
+                Candidato candRemp = (Candidato) cache.get(contador);
+                String condicion = daoCandidato.obtenerCondicionElemento(candTemp);
+                candRemp.setId(id);
+                cache.put(candRemp);
                 cache.delete(contador);
-                daoCandidato.updateElement(temp, condicion);
+                daoCandidato.updateElement(candRemp, condicion);
+                
+                candRemp.setId(contador);
+                daoCandidato.deleteElement(candRemp);
             }
             contador--;
             notificarObservadoresEvento(0);
@@ -108,7 +112,7 @@ public class AdminCandidatos extends Modelo {
             Logger.getLogger(AdminCandidatos.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     @Override
     public Object getDatos() {
         try {
