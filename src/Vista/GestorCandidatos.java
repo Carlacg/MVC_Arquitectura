@@ -19,7 +19,7 @@ public class GestorCandidatos extends javax.swing.JFrame {
     ControladorSesion controladorSesion;
     private static GestorCandidatos instancia;
 
-    public GestorCandidatos(ControladorVotos controladorDeVotos, ControladorSesion controladorSesion) {
+    private GestorCandidatos(ControladorVotos controladorDeVotos, ControladorSesion controladorSesion) {
         this.controladorVotos = controladorDeVotos;
         this.controladorSesion = controladorSesion;
         this.controladorCandidatos = new ControladorCandidatos(controladorVotos.getModelo(), 0);

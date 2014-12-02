@@ -25,7 +25,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private final AdminUsuarios adminUsuarios;
     private static VentanaPrincipal instancia;
 
-    public VentanaPrincipal(ControladorVotos controladorDeVotos, ControladorSesion controladorSesion) {
+    private VentanaPrincipal(ControladorVotos controladorDeVotos, ControladorSesion controladorSesion) {
         this.controladorVotos = controladorDeVotos;
         this.controladorSesion = controladorSesion;
         this.controladorCandidatos = new ControladorCandidatos(controladorVotos.getModelo(), 0);

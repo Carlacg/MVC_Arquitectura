@@ -14,15 +14,12 @@ public class AdminUsuarios extends Modelo {
     private static AdminUsuarios instancia;
     private final ShiroApi shiro;
     private final DreamTeamCache cache;
-    private final int primerUsuario = 501;
     private int contador = 500;
     private DAOUsuarios daoUsuarios;
-    private final AdminCandidatos adminCandidatos;
 
     private AdminUsuarios() {
         this.cache = DreamTeamCache.getInstance();
         this.daoUsuarios = new DAOUsuarios();
-        this.adminCandidatos = AdminCandidatos.getInstance();
         try {
             cache.configLoad();
         } catch (FileConfigurationException ex) {
@@ -50,6 +47,12 @@ public class AdminUsuarios extends Modelo {
         }
     }
 
+    private void iniciaID(){
+        contador = 500;
+        for (Usuario usuario : daoUsuarios.getAllFromTable("usuario")) {
+            contador++;
+        }
+    }
     public void inicializarUsuarios() {
         for (Usuario usuario : daoUsuarios.getAllFromTable("usuario")) {
             contador++;
@@ -60,7 +63,9 @@ public class AdminUsuarios extends Modelo {
                 Logger.getLogger(AdminUsuarios.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-//        registrarUsuario("Carla", "123", "Admin");
+//        registrarUsuario("admin", "uno", "Admin");
+//        registrarUsuario("Carlos", "dos", "Votante");
+//        registrarUsuario("Alex", "tres", "Gestor");
     }
 
     private void inicializarRoles() {
@@ -123,7 +128,7 @@ public class AdminUsuarios extends Modelo {
 //            Logger.getLogger(AdminUsuarios.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 
-        inicializarUsuarios();
+        iniciaID();
         contador++;
         String password = shiro.encriptar(clave);
         Usuario usuarioNuevo = new Usuario(contador, usuario, password, "Votante");

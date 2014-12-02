@@ -18,9 +18,10 @@ public class VentanaTabla extends javax.swing.JFrame {
 
     private static VentanaTabla instancia;
 
-    public VentanaTabla() {
+    private VentanaTabla() {
         initComponents();
         RefineryUtilities.centerFrameOnScreen(this);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
     }
 
@@ -76,7 +77,7 @@ public class VentanaTabla extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaVotos = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Lista Candidatos");
 
         jPanel1.setBackground(new java.awt.Color(254, 254, 254));
