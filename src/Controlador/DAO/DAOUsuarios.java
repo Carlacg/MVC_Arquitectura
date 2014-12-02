@@ -14,11 +14,6 @@ public class DAOUsuarios extends DAOBD<Usuario> {
     public String obtenerCondicionElemento(Usuario elemento) {
         int idUsuario = elemento.getId();
         String condicion = "usuario_id = " + idUsuario;
-        try {
-            this.closeConnection(this.getConnection());
-        } catch (SQLException ex) {
-            Logger.getLogger(DAOUsuarios.class.getName()).log(Level.SEVERE, null, ex);
-        }
 
         return condicion;
 
@@ -34,12 +29,7 @@ public class DAOUsuarios extends DAOBD<Usuario> {
             System.out.println("ERROR EN LA LEÍDA DE LA BD.");
             ex.printStackTrace();
         }
-        try {
-            this.closeConnection(this.getConnection());
-        } catch (SQLException ex) {
-            Logger.getLogger(DAOUsuarios.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+        
         return null;
     }
 
@@ -54,7 +44,9 @@ public class DAOUsuarios extends DAOBD<Usuario> {
                         + ",`password` = '" + elemento.getPassword() + "'"
                         + ",`rol` = '" + elemento.getRoles() + "'"
                         + " WHERE " + condicion);
-        this.closeConnection(this.getConnection());
+        sentencia.close();
+        sentencia = null;
+        this.closeConnection();
 
         return (actualizaUsuario != 0);
     }
@@ -63,14 +55,16 @@ public class DAOUsuarios extends DAOBD<Usuario> {
     public Usuario findElement(String nombreTabla, String condicion) throws SQLException {
         this.establishConnection();
         String query = "SELECT * FROM " + nombreTabla + " WHERE " + condicion;
-        Statement sentenciaBuscaliente = this.getConnection().createStatement();
-        ResultSet busquedaCliente = sentenciaBuscaliente.executeQuery(query);
+        Statement sentencia = this.getConnection().createStatement();
+        ResultSet busquedaCliente = sentencia.executeQuery(query);
         busquedaCliente.next();
         Usuario unUsuario = new Usuario(busquedaCliente.getInt("usuario_id"),
                 busquedaCliente.getString("nombre"),
                 busquedaCliente.getString("password"),
                 busquedaCliente.getString("rol"));
-        this.closeConnection(this.getConnection());
+        sentencia.close();
+        sentencia = null;
+        this.closeConnection();
 
         return unUsuario;
     }

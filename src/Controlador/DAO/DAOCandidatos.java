@@ -5,8 +5,6 @@ import Modelo.Candidato;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class DAOCandidatos extends DAOBD<Candidato> {
 
@@ -14,11 +12,7 @@ public class DAOCandidatos extends DAOBD<Candidato> {
     public String obtenerCondicionElemento(Candidato elemento) {
         int idCandidato = elemento.getId();
         String condicion = "candidato_id = " + idCandidato;
-        try {
-            this.closeConnection(this.getConnection());
-        } catch (SQLException ex) {
-            Logger.getLogger(DAOCandidatos.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
         return condicion;
     }
 
@@ -31,11 +25,7 @@ public class DAOCandidatos extends DAOBD<Candidato> {
             System.out.println("ERROR EN LA LEÍDA DE LA BD.");
             ex.printStackTrace();
         }
-        try {
-            this.closeConnection(this.getConnection());
-        } catch (SQLException ex) {
-            Logger.getLogger(DAOCandidatos.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
         return null;
     }
 
@@ -49,22 +39,25 @@ public class DAOCandidatos extends DAOBD<Candidato> {
                         + ",`nombre` = '" + elemento.getNombre() + "'"
                         + ",`num_votos` = '" + elemento.getNumVotos() + "'"
                         + " WHERE " + condicion);
-        this.closeConnection(this.getConnection());
+        sentencia.close();
+        sentencia = null;
+        this.closeConnection();
         return (actualizaCandidato != 0);
     }
-
 
     @Override
     public Candidato findElement(String nombreTabla, String condicion) throws SQLException {
         this.establishConnection();
         String query = "SELECT * FROM " + nombreTabla + " WHERE " + condicion;
-        Statement sentenciaBuscaliente = this.getConnection().createStatement();
-        ResultSet busquedaCliente = sentenciaBuscaliente.executeQuery(query);
+        Statement sentencia = this.getConnection().createStatement();
+        ResultSet busquedaCliente = sentencia.executeQuery(query);
         busquedaCliente.next();
         Candidato unCandidato = new Candidato(busquedaCliente.getInt("candidato_id"),
                 busquedaCliente.getString("nombre"),
                 busquedaCliente.getInt("num_votos"));
-        this.closeConnection(this.getConnection());
+        sentencia.close();
+        sentencia = null;
+        this.closeConnection();
         return unCandidato;
     }
 

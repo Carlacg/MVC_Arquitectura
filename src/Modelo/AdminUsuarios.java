@@ -63,9 +63,9 @@ public class AdminUsuarios extends Modelo {
                 Logger.getLogger(AdminUsuarios.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-//        registrarUsuario("admin", "uno", "Admin");
-//        registrarUsuario("Carlos", "dos", "Votante");
-//        registrarUsuario("Alex", "tres", "Gestor");
+//        registrarUsuario("Carla", "123", "Admin");
+//        registrarUsuario("Carlos", "12", "Votante");
+//        registrarUsuario("Alex", "1", "Gestor");
     }
 
     private void inicializarRoles() {
